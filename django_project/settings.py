@@ -10,7 +10,7 @@ from django.contrib.messages import constants as messages_constants
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#std:setting-SECRET_KEY
-SECRET_KEY = os.environ.get('SECRET_KEY')
+SECRET_KEY = os.environ.get('BOOKMARKS_SECRET_KEY')
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#debug
 DEBUG = True
@@ -156,9 +156,7 @@ AWS_ACCESS_KEY_ID = os.getenv('BOOKMARKS_AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY = os.getenv('BOOKMARKS_AWS_SECRET_ACCESS_KEY')
 AWS_STORAGE_BUCKET_NAME = 'bookmarks-jamesf-xyz'
 AWS_S3_CUSTOM_DOMAIN = 'cdn.bookmarks.jamesf.xyz'
-AWS_S3_ENDPOINT_URL = (
-    "https://28145455e23695ed8e4904aaff8f6655.r2.cloudflarestorage.com/"
-)
+AWS_S3_ENDPOINT_URL = 'https://28145455e23695ed8e4904aaff8f6655.r2.cloudflarestorage.com/'
 AWS_S3_SIGNATURE_VERSION = 's3v4'
 AWS_S3_ADDRESSING_STYLE = 'path'
 AWS_S3_REGION_NAME = 'auto'

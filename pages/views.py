@@ -55,6 +55,7 @@ def add_bookmark(request):
             # strip html from content
             content = BeautifulSoup(response.content, 'html.parser').get_text()
             bookmark.summary = get_content_summary(content[:20000])
+            print(f"Bookmark summary: {bookmark.summary}")
 
             # classify bookmark
             categories = Category.objects.filter(approved=True)
