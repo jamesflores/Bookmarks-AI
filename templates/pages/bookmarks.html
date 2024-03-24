@@ -1,11 +1,61 @@
 {% extends '_base.html' %}
 {% load static %}
+{% load crispy_forms_tags %}
 
 {% block title %}Bookmarks AI{% endblock title %}
 
 {% block content %}
-<div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
-<h1 class="display-4">Bookmarks AI</h1>
-  <p class="lead">A Django starter project with batteries.</p>
+<div class="text-center mx-auto">
+    <h1 class="display-4">Bookmarks AI</h1>
 </div>
+<div class="pricing-header px-3 py-3 pt-md-4 pb-md-4 mx-auto text-center">
+    {% if messages %}
+        {% for message in messages %}
+            <div class="{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+    <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#bookmarkModal">
+        Add Bookmark
+    </button>
+    {% for bookmark in bookmarks %}
+    <div class="card-deck mb-3 text-center mt-3">
+        <div class="card mb-4 shadow-sm">
+            <div class="card-header">
+                <h4 class="my-0 font-weight-normal"><a href="{{ bookmark.url }}" target="_blank">{{ bookmark.title|default:'' }}</a></h4>
+                <small>{{ bookmark.category }}</small>
+            </div>
+            <div class="card-body">
+                <ul class="list-unstyled mt-3 mb-4">
+                    <li>{{ bookmark.description|default:'' }}</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<div class="modal fade" id="bookmarkModal" tabindex="-1" aria-labelledby="bookmarkModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="bookmarkModalLabel">New Bookmark</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="post" action="{% url 'add_bookmark' %}">
+                <div class="modal-body">
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save Bookmark</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 {% endblock content %}

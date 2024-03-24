@@ -21,7 +21,7 @@
 <body>
   <nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container-fluid">
-      <a class="navbar-brand" href="{% url 'home' %}">DjangoX</a>
+      <a class="navbar-brand" href="{% url 'home' %}">Bookmarks AI</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
         aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -39,9 +39,8 @@
         <ul class="navbar-nav ms-auto">
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              Settings
+              My Account
             </a>
-            <!-- Apply dropdown-menu-end here to align the dropdown menu to the right -->
             <ul class="dropdown-menu dropdown-menu-end">
               <li><a class="dropdown-item" href="#">{{ user.email }}</a></li>
               <li><hr class="dropdown-divider"></li>
@@ -68,7 +67,7 @@
 
   <footer class="footer">
     <div class="container">
-      <span class="text-muted">Footer...</span>
+      <span class="text-muted small">Created by <a href="https://jamesflores.net" target="_blank">James Flores</a></span>
     </div>
   </footer>
 
