@@ -17,9 +17,13 @@
             </div>
         {% endfor %}
     {% endif %}
-    <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#bookmarkModal">
+
+    <button type="button" class="btn btn-outline-primary mb-3" data-bs-toggle="modal" data-bs-target="#bookmarkModal">
         Add Bookmark
     </button>
+
+    {% include 'pages/pagination.html' %}
+
     {% for bookmark in bookmarks %}
     <div class="card-deck mb-3 text-center mt-3">
         <div class="card mb-4 shadow-sm">
@@ -35,6 +39,8 @@
         </div>
     </div>
     {% endfor %}
+
+    {% include 'pages/pagination.html' %}
 </div>
 
 <div class="modal fade" id="bookmarkModal" tabindex="-1" aria-labelledby="bookmarkModalLabel" aria-hidden="true">

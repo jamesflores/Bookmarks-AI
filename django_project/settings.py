@@ -233,3 +233,6 @@ MESSAGE_TAGS = {
     messages_constants.WARNING: 'alert alert-warning',
     messages_constants.ERROR: 'alert alert-danger',
 }
+
+# Bookmarks settings
+BOOKMARKS_PER_PAGE = 10
