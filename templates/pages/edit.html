@@ -2,13 +2,20 @@
 {% load static %}
 {% load crispy_forms_tags %}
 
-{% block title %}Edit | Bookmarks AI{% endblock %}
+{% block title %}{{ bookmark.title|default:bookmark.url }} | Edit | Bookmarks AI{% endblock %}
 
 {% block content %}
 <div class="text-center mx-auto">
     <h1 class="display-4">Edit Bookmark</h1>
 </div>
 <div class="pricing-header px-3 py-3 pt-md-4 pb-md-4 mx-auto text-center">
+    <p class="lead">
+        <a href="{{ bookmark.url }}" target="_blank">{{ bookmark.title|default:bookmark.url }}</a>
+    </p>
+    <p class="small">
+        Created: {{ bookmark.created_at }}
+        Modified: {{ bookmark.modified_at }}
+    </p>
     <form method="post" action="{% url 'edit_bookmark' bookmark.id %}">
         {% csrf_token %}
         {{ form|crispy }}

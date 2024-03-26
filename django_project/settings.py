@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     "debug_toolbar",
     "storages",
     "django_recaptcha",
+    "corsheaders",
     # Local
     "accounts",
     "pages",
@@ -53,6 +54,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "allauth.account.middleware.AccountMiddleware",  # django-allauth
+    "corsheaders.middleware.CorsMiddleware",  # django-cors-headers
 ]
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#root-urlconf
@@ -168,6 +170,13 @@ AWS_DEFAULT_ACL = None
 AWS_S3_OBJECT_PARAMETERS = {
     'CacheControl': 'max-age=86400',
 }
+
+# CORS settings
+CORS_ALLOWED_ORIGINS = [
+    "https://bookmarks.jamesf.xyz",
+    "http://localhost:8000",
+    "http://127.0.0.1:8000"
+]
 
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/static/'

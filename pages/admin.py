@@ -4,7 +4,7 @@ from .models import *
 
 
 class BookmarkAdmin(admin.ModelAdmin):
-    list_display = ("url", "user", "title", "category", "notes", "created_at")
+    list_display = ("url", "user", "title", "category", "notes", "created_at", "modified_at")
     search_fields = ("title", "description", "summary", "notes")
 
 

@@ -12,6 +12,7 @@ class Bookmark(models.Model):
     notes = models.TextField(blank=True, null=True)
     category = models.ForeignKey('Category', on_delete=models.CASCADE, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    modified_at = models.DateTimeField(auto_now=True, blank=True, null=True)
 
     def __str__(self):
         return self.url
