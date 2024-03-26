@@ -18,7 +18,7 @@ DEBUG = False
 # https://docs.djangoproject.com/en/dev/ref/settings/#allowed-hosts
 ALLOWED_HOSTS = ["*"]
 
-CSRF_ALLOWED_ORIGINS = [
+CSRF_TRUSTED_ORIGINS = [
     "https://bookmarks.jamesf.xyz",
     "http://localhost:8000",
 ]
