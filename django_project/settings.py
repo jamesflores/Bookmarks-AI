@@ -18,6 +18,11 @@ DEBUG = False
 # https://docs.djangoproject.com/en/dev/ref/settings/#allowed-hosts
 ALLOWED_HOSTS = ["*"]
 
+CSRF_ALLOWED_ORIGINS = [
+    "https://bookmarks.jamesf.xyz",
+    "http://localhost:8000",
+]
+
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = [
     "django.contrib.admin",
