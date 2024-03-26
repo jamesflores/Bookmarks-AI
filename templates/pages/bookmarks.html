@@ -22,6 +22,21 @@
         Add Bookmark
     </button>
 
+    <div class="justify-content-center">
+        {% if not filter_category %}
+            <a href="{% url 'home' %}" class="btn btn-light btn-sm me-2 mb-3 active">(All Bookmarks)</a>
+        {% else %}
+            <a href="{% url 'home' %}" class="btn btn-light btn-sm me-2 mb-3">(All Bookmarks)</a>
+        {% endif %}
+        {% for category in categories %}
+            {% if filter_category == category.name %}
+                <a href="{% url 'category' category %}" class="btn btn-light btn-sm me-2 mb-3 active">{{ category }}</a>
+            {% else %}
+                <a href="{% url 'category' category %}" class="btn btn-light btn-sm me-2 mb-3">{{ category }}</a>
+            {% endif %}
+        {% endfor %}
+    </div>
+
     {% include 'pages/pagination.html' %}
 
     {% for bookmark in bookmarks %}

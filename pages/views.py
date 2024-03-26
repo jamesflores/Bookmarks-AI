@@ -24,9 +24,14 @@ def HomePageView(request):
     
 
 @login_required(login_url='/accounts/login')
-def BookmarksView(request):
+def BookmarksView(request, category=None):
     form = BookmarkAddForm()
-    bookmarks = Bookmark.objects.filter(user=request.user).order_by('-created_at')
+    all_bookmarks = Bookmark.objects.all().filter(user=request.user)
+    bookmarks = all_bookmarks.order_by('-created_at')
+
+    # Filter by category
+    if category:
+        bookmarks = bookmarks.filter(category__name__icontains=category)
 
     # Sorting
     sort_by = request.GET.get('sort_by')
@@ -58,8 +63,11 @@ def BookmarksView(request):
     previous_page = page_obj.previous_page_number() if page_obj.has_previous() else None
     has_next = page_obj.has_next()
     
+    categories = Category.objects.filter(approved=True, bookmark__in=all_bookmarks).distinct().order_by('name')
     return render(request, "pages/bookmarks.html", {
         'bookmarks': page_obj,
+        'categories': categories,
+        'filter_category': category,  # current category being viewed
         'form': form,
         'paginator': paginator,
         'page_obj': page_obj,
