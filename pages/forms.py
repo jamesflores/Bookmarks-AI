@@ -5,10 +5,31 @@ from crispy_forms.layout import Submit
 from django.core.validators import URLValidator
 from django.core.exceptions import ValidationError
 from crispy_forms.layout import Layout
+from django_recaptcha.fields import ReCaptchaV2Checkbox
+from django_recaptcha.fields import ReCaptchaField
 
-class BookmarkForm(forms.ModelForm):
+
+def validate_url(url):
+    # Check if URL does not start with http(s)://
+    if not url.startswith(('http://', 'https://')):
+        url = 'http://' + url
+
+    # Validate the URL
+    validate = URLValidator()
+    try:
+        validate(url)
+    except ValidationError as e:
+        # If URL is invalid, raise a validation error
+        raise forms.ValidationError("Invalid URL")
+
+    # Return the modified or original URL
+    return url
+
+
+class BookmarkAddForm(forms.ModelForm):
     url = forms.CharField(widget=forms.TextInput(attrs={'autocomplete': 'off'})) 
-   
+    captcha = ReCaptchaField(widget=ReCaptchaV2Checkbox())
+
     class Meta:
         model = Bookmark
         fields = ['url', 'notes']
@@ -25,17 +46,27 @@ class BookmarkForm(forms.ModelForm):
 
     def clean_url(self):
         url = self.cleaned_data['url']
-        # Check if URL does not start with http(s)://
-        if not url.startswith(('http://', 'https://')):
-            url = 'http://' + url
+        return validate_url(url)
 
-        # Validate the URL
-        validate = URLValidator()
-        try:
-            validate(url)
-        except ValidationError as e:
-            # If URL is invalid, raise a validation error
-            raise forms.ValidationError("Invalid URL")
 
-        # Return the modified or original URL
-        return url
+class BookmarkEditForm(forms.ModelForm):
+    class Meta:
+        model = Bookmark
+        fields = ['url', 'title', 'category', 'description', 'notes' ]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_method = 'post'
+        self.helper.layout = Layout(
+            'url',
+            'title',
+            'description',
+            'notes',
+            'category',
+            Submit('submit', 'Save Bookmark'),
+        )
+
+    def clean_url(self):
+        url = self.cleaned_data['url']
+        return validate_url(url)

@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     "crispy_bootstrap5",
     "debug_toolbar",
     "storages",
+    "django_recaptcha",
     # Local
     "accounts",
     "pages",
@@ -236,3 +237,7 @@ MESSAGE_TAGS = {
 
 # Bookmarks settings
 BOOKMARKS_PER_PAGE = 10
+
+# Google Recaptcha
+RECAPTCHA_PRIVATE_KEY = os.environ.get('BOOKMARKS_RECAPTCHA_SECRET_KEY')
+RECAPTCHA_PUBLIC_KEY = os.environ.get('BOOKMARKS_RECAPTCHA_SITE_KEY')

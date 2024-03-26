@@ -18,7 +18,7 @@
         {% endfor %}
     {% endif %}
 
-    <button type="button" class="btn btn-outline-primary mb-3" data-bs-toggle="modal" data-bs-target="#bookmarkModal">
+    <button type="button" class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#bookmarkModal">
         Add Bookmark
     </button>
 
@@ -28,13 +28,17 @@
     <div class="card-deck mb-3 text-center mt-3">
         <div class="card mb-4 shadow-sm">
             <div class="card-header">
-                <h4 class="my-0 font-weight-normal"><a href="{{ bookmark.url }}" target="_blank">{{ bookmark.title|default:'' }}</a></h4>
+                <h4 class="my-0 font-weight-normal mb-2"><a href="{{ bookmark.url }}" target="_blank">{{ bookmark.title|default:'' }}</a></h4>
                 <small>{{ bookmark.category }}</small>
             </div>
             <div class="card-body">
                 <ul class="list-unstyled mt-3 mb-4">
                     <li>{{ bookmark.description|default:'' }}</li>
                 </ul>
+            </div>
+            <div class="card-footer text-end">
+                <a href="{% url 'edit_bookmark' bookmark.id %}" class="btn btn-outline-secondary btn-sm">Edit</a>
+                <a href="{% url 'delete_bookmark' bookmark.id %}" class="btn btn-outline-danger btn-sm" onclick="return confirm('Are you sure you want to delete this bookmark?')">X</a>
             </div>
         </div>
     </div>

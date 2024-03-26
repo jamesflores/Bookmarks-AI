@@ -5,7 +5,7 @@ from django.views.generic import TemplateView
 from django.contrib.auth.decorators import login_required
 import requests
 
-from pages.forms import BookmarkForm
+from pages.forms import BookmarkAddForm, BookmarkEditForm
 from pages.models import Bookmark, Category
 
 import marvin
@@ -25,7 +25,7 @@ def HomePageView(request):
 
 @login_required(login_url='/accounts/login')
 def BookmarksView(request):
-    form = BookmarkForm()
+    form = BookmarkAddForm()
     bookmarks = Bookmark.objects.filter(user=request.user).order_by('-created_at')
 
     # Sorting
@@ -73,7 +73,7 @@ def BookmarksView(request):
 @login_required(login_url='/accounts/login')
 def add_bookmark(request):
     if request.method == 'POST':
-        form = BookmarkForm(request.POST)
+        form = BookmarkAddForm(request.POST)
         if form.is_valid():
             bookmark = form.save(commit=False)
             bookmark.user = request.user
@@ -107,9 +107,64 @@ def add_bookmark(request):
             bookmark.save()
             messages.success(request, 'Bookmark saved successfully.')
         else:
-            messages.error(request, 'Error saving bookmark. Invalid URL or URL not reachable.')
+            messages.error(request, 'Error saving bookmark. (Did you complete the captcha?)')
 
     return HttpResponseRedirect(reverse('bookmarks'))
+
+
+@login_required(login_url='/accounts/login')
+def edit_bookmark(request, pk):
+    try:
+        bookmark = Bookmark.objects.get(pk=pk)
+    except Bookmark.DoesNotExist:
+        messages.error(request, 'Bookmark not found.')
+        return HttpResponseRedirect(reverse('bookmarks'))
+    
+    if bookmark.user != request.user:
+        messages.error(request, 'Unauthorised access.')
+        return HttpResponseRedirect(reverse('bookmarks'))
+    
+    if request.method == 'POST':
+        form = BookmarkEditForm(request.POST, instance=bookmark)
+        if form.is_valid():
+            bookmark = form.save(commit=False)
+            bookmark.user = request.user
+            bookmark.title = form.cleaned_data['title']
+            bookmark.description = form.cleaned_data['description']
+            bookmark.notes = form.cleaned_data['notes']
+            bookmark.category = form.cleaned_data['category']
+            bookmark.save()
+
+            messages.success(request, 'Bookmark updated successfully.')
+            return HttpResponseRedirect(reverse('bookmarks'))
+    else:
+        form = BookmarkEditForm(instance=bookmark)
+
+    return render(request, "pages/edit.html", {
+        'bookmark': bookmark,
+        'form': form,
+    })
+
+
+@login_required(login_url='/accounts/login')
+def delete_bookmark(request, pk):
+    try:
+        bookmark = Bookmark.objects.get(pk=pk)
+    except Bookmark.DoesNotExist:
+        messages.error(request, 'Bookmark not found.')
+        return HttpResponseRedirect(reverse('bookmarks'))
+    
+    if bookmark.user != request.user:
+        messages.error(request, 'Unauthorised access.')
+        return HttpResponseRedirect(reverse('bookmarks'))
+    
+    bookmark.delete()
+    messages.success(request, 'Bookmark deleted successfully.')
+    referrer = request.META.get('HTTP_REFERER')
+    if referrer:
+        return HttpResponseRedirect(referrer)
+    else:
+        return HttpResponseRedirect(reverse('bookmarks'))
 
 
 # Input: HTML content, Output: dict of OG tags
