@@ -14,6 +14,12 @@ SECRET_KEY = os.environ.get('BOOKMARKS_SECRET_KEY')
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#debug
 DEBUG = False
+if not DEBUG:
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    #SECURE_SSL_REDIRECT = True  # not for Cloudflare
+    USE_X_FORWARDED_HOST = True
+    USE_X_FORWARDED_PORT = True
+    ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https'
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#allowed-hosts
 ALLOWED_HOSTS = ["*"]
