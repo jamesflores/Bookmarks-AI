@@ -56,6 +56,7 @@ class BookmarkEditForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.fields['category'].queryset = self.fields['category'].queryset.order_by('name')
         self.helper = FormHelper()
         self.helper.form_method = 'post'
         self.helper.layout = Layout(

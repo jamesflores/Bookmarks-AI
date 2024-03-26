@@ -28,7 +28,7 @@
     <div class="card-deck mb-3 text-center mt-3">
         <div class="card mb-4 shadow-sm">
             <div class="card-header">
-                <h4 class="my-0 font-weight-normal mb-2"><a href="{{ bookmark.url }}" target="_blank">{{ bookmark.title|default:'' }}</a></h4>
+                <h4 class="my-0 font-weight-normal mb-2"><a href="{{ bookmark.url }}" target="_blank">{{ bookmark.title|default:bookmark.url }}</a></h4>
                 <small>{{ bookmark.category }}</small>
             </div>
             <div class="card-body">
