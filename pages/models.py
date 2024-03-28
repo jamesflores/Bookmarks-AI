@@ -16,6 +16,19 @@ class Bookmark(models.Model):
 
     def __str__(self):
         return self.url
+    
+    def __serialize__(self):
+        return {
+            'id': self.id,
+            'url': self.url,
+            'title': self.title,
+            'description': self.description,
+            'summary': self.summary,
+            'notes': self.notes,
+            'category': self.category.name if self.category else None,
+            'created_at': self.created_at,
+            'modified_at': self.modified_at,
+        }
 
 
 class Category(models.Model):
@@ -26,3 +39,12 @@ class Category(models.Model):
 
     def __str__(self):
         return self.name
+    
+    def __serialize__(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'description': self.description,
+            'created_at': self.created_at,
+            'approved': self.approved,
+        }

@@ -1,9 +1,24 @@
 {% extends '_base.html' %}
+{% load static %}
 
 {% block title %}About | Bookmarks AI{% endblock %}
 
 {% block content %}
 <div class="text-center mx-auto">
     <h1 class="display-4">About</h1>
+</div>
+<div class="pricing-header px-3 py-3 pt-md-4 pb-md-4 mx-auto text-center">
+    <p class="lead">
+        Bookmarks AI is a simple bookmarks storage webapp with AI auto classification and search.
+        It is built with Django, Bootstrap, and the OpenAI API.
+    </p>
+    <p class="lead">
+        This app is a work-in-progress, but you are free to use it as you wish. Any feedback can be sent to james [ at ] jamesflores.net.
+    </p>
+    <img src="{% static 'images/bookmarks-cover.png' %}" class="img-fluid" alt="Bookmarks AI">
+    <div class="d-grid gap-2 col-6 mt-3 mx-auto">
+        <a href="{% url 'account_login' %}" class="btn btn-secondary">Login</a>
+        <a href="{% url 'account_signup' %}" class="btn btn-primary">Register</a>
+    </div>
 </div>
 {% endblock content %}

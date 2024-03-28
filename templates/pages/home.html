@@ -17,5 +17,10 @@
   {% endfor %}
 {% endif %}
   <p class="lead">A simple bookmarks storage webapp with AI auto classification and search.</p>
+  <img src="{% static 'images/bookmarks-cover.png' %}" class="img-fluid" alt="Bookmarks AI">
+  <div class="d-grid gap-2 col-6 mt-3 mx-auto">
+    <a href="{% url 'account_login' %}" class="btn btn-secondary">Login</a>
+    <a href="{% url 'account_signup' %}" class="btn btn-primary">Register</a>
+  </div>
 </div>
 {% endblock content %}

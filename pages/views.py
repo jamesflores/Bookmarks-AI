@@ -3,12 +3,14 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.views.generic import TemplateView
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 import requests
 
 from pages.forms import BookmarkAddForm, BookmarkEditForm
 from pages.models import Bookmark, Category
 
 import marvin
+
 from bs4 import BeautifulSoup
 from django.contrib import messages
 from django.core.paginator import Paginator
@@ -77,6 +79,24 @@ def BookmarksView(request, category=None):
         'is_paginated': page_obj.has_other_pages(),
     })
 
+
+@login_required(login_url='/accounts/login')
+def SearchBookmarksView(request):
+    search_query = request.GET.get('q')
+    if search_query:
+         # Define the Q objects for searching in title, description, summary, notes, and category name
+        q_objects = Q(title__icontains=search_query) | Q(description__icontains=search_query) | \
+                    Q(summary__icontains=search_query) | Q(notes__icontains=search_query) | \
+                    Q(category__name__icontains=search_query)  # Assuming 'name' is a field in 'Category'
+        bookmarks = Bookmark.objects.filter(user=request.user).filter(q_objects).distinct()
+
+        return render(request, "pages/search.html", {
+            'bookmarks': bookmarks,
+            'query': search_query,
+        })
+    else:
+        return HttpResponseRedirect(reverse('bookmarks'))
+    
 
 @login_required(login_url='/accounts/login')
 def add_bookmark(request):
@@ -198,9 +218,17 @@ def get_og_tags(content: str) -> dict:
 @marvin.fn
 def get_content_summary(text: str) -> str:
     """
-    Returns a summary of the text in one paragraph.
+    Returns a summary of the content in 1-2 paragraphs.
     """
 
 
 class AboutPageView(TemplateView):
     template_name = "pages/about.html"
+
+
+class PrivacyPageView(TemplateView):
+    template_name = "pages/privacy.html"
+
+
+class TermsOfServicePageView(TemplateView):
+    template_name = "pages/tos.html"
