@@ -16,6 +16,8 @@ from django.contrib import messages
 from django.core.paginator import Paginator
 from django.conf import settings
 
+from summa import summarizer
+
 
 def HomePageView(request):
     user = request.user
@@ -121,7 +123,8 @@ def add_bookmark(request):
 
             # strip html from content
             content = BeautifulSoup(response.content, 'html.parser').get_text()
-            bookmark.summary = get_content_summary(content[:20000])
+            #bookmark.summary = get_content_summary(content[:20000])  # Marvin AI
+            bookmark.summary = summarizer.summarize(content)  # Summa
             print(f"Bookmark summary: {bookmark.summary}")
 
             # classify bookmark
