@@ -18,6 +18,7 @@ Demo: https://bookmarks.jamesf.xyz
 - Google Recaptcha is used on user registration and password reset.
   - You will need to create your own account and set the RECAPTCHA environment variables.
 - SMTP server for sending out account emails (I use Amazon SES).
+- OpenAI account to set the [Marvin](https://github.com/PrefectHQ/marvin) environment variables.
 
 ## 📖 Installation
 ```
@@ -40,6 +41,7 @@ $ source venv/bin/activate
   - Set `BOOKMARKS_SECRET_KEY` to any [random set of characters](https://snippet.run/james/djsecret).
   - Set `DATABASE_URL` to use a Postgres database.
   - Set `RECAPTCHA_PRIVATE_KEY` and `RECAPTCHA_PUBLIC_KEY` for Google Recaptcha.
+  - Set `MARVIN_OPENAI_API_KEY`, `MARVIN_LOG_LEVEL` and `MARVIN_CHAT_COMPLETIONS_MODEL` for AI functionality.
   - Set the following email environment variables for email:
 ```
 EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend  # django.core.mail.backends.console.EmailBackend
@@ -61,6 +63,7 @@ Contributions, issues and feature requests are welcome!
 ## 🙏 Thanks
 
 - A batteries-included Django starter project: https://github.com/wsvincent/djangox
+- The AI engineering toolkit: https://github.com/PrefectHQ/marvin
 
 ## ⭐️ Support
 
