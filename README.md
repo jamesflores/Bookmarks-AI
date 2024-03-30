@@ -29,6 +29,7 @@ $ source venv/bin/activate
 
 (venv) $ pip install -r requirements.txt
 (venv) $ python manage.py migrate
+(venv) $ python manage.py loaddata fixtures/Category.json  # default bookmark categories (adjust as needed)
 (venv) $ python manage.py createsuperuser
 (venv) $ python manage.py runserver
 
