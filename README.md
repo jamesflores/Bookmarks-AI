@@ -53,6 +53,7 @@ EMAIL_HOST_USER=user
 EMAIL_HOST_PASSWORD=pass
 DEFAULT_FROM_EMAIL=me@mail.com
 ```
+- Using Django Admin, update your site details (domain and display name).
 
 ----
 
