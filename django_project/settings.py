@@ -3,17 +3,31 @@ import os
 
 import dj_database_url
 
+from django.contrib.messages import constants as messages_constants
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#std:setting-SECRET_KEY
-SECRET_KEY = os.environ.get('SECRET_KEY')
+SECRET_KEY = os.environ.get('BOOKMARKS_SECRET_KEY')
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#debug
-DEBUG = True
+DEBUG = False
+if not DEBUG:
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    #SECURE_SSL_REDIRECT = True  # not for Cloudflare
+    USE_X_FORWARDED_HOST = True
+    USE_X_FORWARDED_PORT = True
+    ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https'
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#allowed-hosts
 ALLOWED_HOSTS = ["*"]
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://bookmarks.jamesf.xyz",
+    "http://localhost:8000",
+]
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = [
@@ -31,6 +45,9 @@ INSTALLED_APPS = [
     "crispy_forms",
     "crispy_bootstrap5",
     "debug_toolbar",
+    "storages",
+    "django_recaptcha",
+    "corsheaders",
     # Local
     "accounts",
     "pages",
@@ -39,7 +56,7 @@ INSTALLED_APPS = [
 # https://docs.djangoproject.com/en/dev/ref/settings/#middleware
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
-    "whitenoise.middleware.WhiteNoiseMiddleware",  # WhiteNoise
+    #"whitenoise.middleware.WhiteNoiseMiddleware",  # WhiteNoise
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "debug_toolbar.middleware.DebugToolbarMiddleware",  # Django Debug Toolbar
@@ -48,6 +65,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "allauth.account.middleware.AccountMiddleware",  # django-allauth
+    "corsheaders.middleware.CorsMiddleware",  # django-cors-headers
 ]
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#root-urlconf
@@ -138,14 +156,46 @@ STATIC_URL = "/static/"
 STATICFILES_DIRS = [BASE_DIR / "static"]
 
 # https://whitenoise.readthedocs.io/en/latest/django.html
-STORAGES = {
-    "default": {
-        "BACKEND": "django.core.files.storage.FileSystemStorage",
-    },
-    "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
-    },
+#STORAGES = {
+#    "default": {
+#        "BACKEND": "django.core.files.storage.FileSystemStorage",
+#    },
+#    "staticfiles": {
+#        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+#    },
+#}
+
+# S3 compatible settings for Cloudflare R2
+AWS_ACCESS_KEY_ID = os.getenv('BOOKMARKS_AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = os.getenv('BOOKMARKS_AWS_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME = 'bookmarks-jamesf-xyz'
+AWS_S3_CUSTOM_DOMAIN = 'cdn.bookmarks.jamesf.xyz'
+AWS_S3_ENDPOINT_URL = 'https://28145455e23695ed8e4904aaff8f6655.r2.cloudflarestorage.com/'
+AWS_S3_SIGNATURE_VERSION = 's3v4'
+AWS_S3_ADDRESSING_STYLE = 'path'
+AWS_S3_REGION_NAME = 'auto'
+#AWS_S3_VERIFY = False
+
+# To allow django-admin to collect static files into a single location for deployment
+AWS_DEFAULT_ACL = None
+AWS_S3_OBJECT_PARAMETERS = {
+    'CacheControl': 'max-age=86400',
 }
+
+# CORS settings
+CORS_ALLOWED_ORIGINS = [
+    "https://bookmarks.jamesf.xyz",
+    "http://localhost:8000",
+    "http://127.0.0.1:8000"
+]
+
+# Static files (CSS, JavaScript, Images)
+STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/static/'
+STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+# Media files (uploads)
+MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/media/'
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/stable/ref/settings/#default-auto-field
@@ -195,3 +245,24 @@ ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_AUTHENTICATION_METHOD = "email"
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_FORMS = {
+    'signup': 'accounts.forms.CustomSignupForm',
+    'reset_password': 'accounts.forms.CustomResetPasswordForm',
+
+}
+
+# Bootstrap alert classes for messages
+MESSAGE_TAGS = {
+    messages_constants.DEBUG: 'alert alert-info',
+    messages_constants.INFO: 'alert alert-info',
+    messages_constants.SUCCESS: 'alert alert-success',
+    messages_constants.WARNING: 'alert alert-warning',
+    messages_constants.ERROR: 'alert alert-danger',
+}
+
+# Bookmarks settings
+BOOKMARKS_PER_PAGE = 10
+
+# Google Recaptcha
+RECAPTCHA_PRIVATE_KEY = os.environ.get('BOOKMARKS_RECAPTCHA_SECRET_KEY')
+RECAPTCHA_PUBLIC_KEY = os.environ.get('BOOKMARKS_RECAPTCHA_SITE_KEY')

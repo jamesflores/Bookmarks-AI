@@ -2,7 +2,7 @@
 {% load static %}
 {% load crispy_forms_tags %}
 
-{% block title %}Bookmarks AI{% endblock title %}
+{% block title %}Search Results for '{{ query }}' | Bookmarks AI{% endblock title %}
 
 {% block content %}
 <div class="text-center mx-auto">
@@ -18,16 +18,22 @@
         {% endfor %}
     {% endif %}
 
-    <button type="button" class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#bookmarkModal">
-        Add Bookmark
-    </button>
+    {% if bookmarks %}
+        <div class="text-center mx-auto">
+            <p class="lead">Search results for '{{ query }}'</p>
+        </div>
+    {% else %}
+        <div class="text-center mx-auto">
+            <p class="lead">No bookmarks found for '{{ query }}'</p>
+        </div>
+    {% endif %}
 
     <div class="form-group mb-3">
         <form method="get" action="{% url 'search_bookmarks' %}">
             {% csrf_token %}
             <div class="row">
                 <div class="col-md-10">
-                    <input type="text" class="form-control" name="q" id="q" placeholder="Search">
+                    <input type="text" class="form-control" name="q" id="q" placeholder="Search" value="{{ query }}">
                 </div>
                 <div class="col-md-2">
                     <button type="submit" class="btn btn-primary">Search</button>
@@ -36,22 +42,9 @@
         </form>
     </div>
 
-    {% if bookmarks %}
-        <div class="justify-content-center">
-            {% if not filter_category %}
-                <a href="{% url 'home' %}" class="btn btn-light btn-sm me-2 mb-3 active">(All Bookmarks)</a>
-            {% else %}
-                <a href="{% url 'home' %}" class="btn btn-light btn-sm me-2 mb-3">(All Bookmarks)</a>
-            {% endif %}
-            {% for category in categories %}
-                {% if filter_category == category.name %}
-                    <a href="{% url 'category' category %}" class="btn btn-light btn-sm me-2 mb-3 active">{{ category }}</a>
-                {% else %}
-                    <a href="{% url 'category' category %}" class="btn btn-light btn-sm me-2 mb-3">{{ category }}</a>
-                {% endif %}
-            {% endfor %}
-        </div>
-    {% endif %}
+    <div class="row">
+        {{ ai }}
+    </div>
 
     {% include 'pages/pagination.html' %}
 
@@ -76,27 +69,6 @@
     {% endfor %}
 
     {% include 'pages/pagination.html' %}
-</div>
-
-<div class="modal fade" id="bookmarkModal" tabindex="-1" aria-labelledby="bookmarkModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="bookmarkModalLabel">New Bookmark</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <form method="post" action="{% url 'add_bookmark' %}">
-                <div class="modal-body">
-                    {% csrf_token %}
-                    {{ form|crispy }}
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Save Bookmark</button>
-                </div>
-            </form>
-        </div>
-    </div>
 </div>
 
 {% endblock content %}

@@ -7,7 +7,10 @@
 <h2>Register</h2>
 <form method="post">
   {% csrf_token %}
-  {{ form|crispy }}
+  {{ form.non_field_errors }}
+  {{ form.email|as_crispy_field }}
+  {{ form.password1|as_crispy_field }}
+  {{ form.captcha|as_crispy_field }}
   <button class="btn btn-primary" type="submit">Register</button>
 </form>
 {% endblock content %}
