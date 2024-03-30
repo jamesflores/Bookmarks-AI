@@ -138,7 +138,7 @@ def add_bookmark(request):
             bookmark.save()
             messages.success(request, 'Bookmark saved successfully.')
         else:
-            messages.error(request, 'Error saving bookmark. (Did you complete the captcha?)')
+            messages.error(request, 'Error saving bookmark. Invalid URL or URL not reachable.')
 
     return HttpResponseRedirect(reverse('bookmarks'))
 

@@ -28,7 +28,7 @@ def validate_url(url):
 
 class BookmarkAddForm(forms.ModelForm):
     url = forms.CharField(widget=forms.TextInput(attrs={'autocomplete': 'off'})) 
-    captcha = ReCaptchaField(widget=ReCaptchaV2Checkbox())
+    #captcha = ReCaptchaField(widget=ReCaptchaV2Checkbox())
 
     class Meta:
         model = Bookmark
