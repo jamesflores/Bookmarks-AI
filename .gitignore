@@ -14,3 +14,7 @@ media
 # Virtual environment
 .venv
 venv
+data.tar
+
+# Environment variables
+.env

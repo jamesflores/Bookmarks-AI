@@ -1,9 +1,11 @@
 from pathlib import Path
 import os
-
 import dj_database_url
-
+from dotenv import load_dotenv
 from django.contrib.messages import constants as messages_constants
+
+
+load_dotenv()
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -16,7 +18,6 @@ SECRET_KEY = os.environ.get('BOOKMARKS_SECRET_KEY')
 DEBUG = False
 if not DEBUG:
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-    #SECURE_SSL_REDIRECT = True  # not for Cloudflare
     USE_X_FORWARDED_HOST = True
     USE_X_FORWARDED_PORT = True
     ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https'
@@ -92,12 +93,6 @@ TEMPLATES = [
 ]
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#databases
-#DATABASES = {
-#    "default": {
-#        "ENGINE": "django.db.backends.sqlite3",
-#        "NAME": BASE_DIR / "db.sqlite3",
-#    }
-#}
 
 # uses the DATABASE_URL environment variable or defaults to a local sqlite database
 sqlite3 = 'sqlite:///' + os.path.join(BASE_DIR, 'db.sqlite3')
@@ -248,7 +243,6 @@ ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_FORMS = {
     'signup': 'accounts.forms.CustomSignupForm',
     'reset_password': 'accounts.forms.CustomResetPasswordForm',
-
 }
 
 # Bootstrap alert classes for messages
