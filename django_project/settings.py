@@ -2,9 +2,13 @@ from pathlib import Path
 import os
 
 import dj_database_url
+import sentry_sdk
+from dotenv import load_dotenv
 
 from django.contrib.messages import constants as messages_constants
 
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -266,3 +270,17 @@ BOOKMARKS_PER_PAGE = 10
 # Google Recaptcha
 RECAPTCHA_PRIVATE_KEY = os.environ.get('BOOKMARKS_RECAPTCHA_SECRET_KEY')
 RECAPTCHA_PUBLIC_KEY = os.environ.get('BOOKMARKS_RECAPTCHA_SITE_KEY')
+
+
+# sentry.io
+if os.environ.get('SENTRY_DSN'):
+    sentry_sdk.init(
+        dsn=os.environ.get('SENTRY_DSN'),
+        # Set traces_sample_rate to 1.0 to capture 100%
+        # of transactions for performance monitoring.
+        traces_sample_rate=1.0,
+        # Set profiles_sample_rate to 1.0 to profile 100%
+        # of sampled transactions.
+        # We recommend adjusting this value in production.
+        profiles_sample_rate=1.0,
+    )
