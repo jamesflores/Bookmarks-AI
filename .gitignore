@@ -14,10 +14,15 @@ media
 # Virtual environment
 .venv
 venv
+
+# Misc
+backup.sql
+backup.tar
+.idea
+backup
 data.tar
+data.json
 
 # Environment variables
 .env
-backup.sql
-backup.tar
-data.json
+
