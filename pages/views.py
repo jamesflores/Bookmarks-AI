@@ -109,36 +109,41 @@ def add_bookmark(request):
             bookmark.user = request.user
             bookmark.notes = form.cleaned_data['notes']
 
-            # check if URL is reachable
+            # get content from URL
             print(f"[{request.user}] Add bookmark: {bookmark.url}")
-            response = requests.get(bookmark.url)
-            if response.status_code != 200:
-                messages.error(request, 'Error saving bookmark. Invalid URL or URL not reachable.')
-                return HttpResponseRedirect(reverse('bookmarks'))
+            headers = {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'
+            }
+            response = requests.get(bookmark.url, headers=headers)
             
-            # get og tags
-            og_tags = get_og_tags(response.content)
-            bookmark.title = og_tags['title'] if og_tags['title'] else bookmark.url.strip('https://').strip('http://')
-            bookmark.description = og_tags['description'] if og_tags['description'] else None
+            if response.status_code == 200:
+                # get og tags
+                og_tags = get_og_tags(response.content)
+                bookmark.title = og_tags['title'] if og_tags['title'] else bookmark.url.strip('https://').strip('http://')
+                bookmark.description = og_tags['description'] if og_tags['description'] else None
 
-            # strip html from content
-            content = BeautifulSoup(response.content, 'html.parser').get_text()
-            #bookmark.summary = get_content_summary(content[:20000])  # Marvin AI
-            bookmark.summary = summarizer.summarize(content)  # Summa
-            print(f"Bookmark summary: {bookmark.summary}")
+                # strip html from content
+                content = BeautifulSoup(response.content, 'html.parser').get_text()
+                #bookmark.summary = get_content_summary(content[:20000])  # Marvin AI
+                bookmark.summary = summarizer.summarize(content)  # Summa
+                print(f"Bookmark summary: {bookmark.summary}")
 
-            # classify bookmark
-            categories = Category.objects.filter(approved=True)
-            category = marvin.classify(
-                f'{bookmark.title} {bookmark.description}',
-                labels=[category.name for category in categories]
-            )
-            bookmark.category = Category.objects.get(name=category)
+                # classify bookmark
+                categories = Category.objects.filter(approved=True)
+                category = marvin.classify(
+                    f'{bookmark.title} {bookmark.description}',
+                    labels=[category.name for category in categories]
+                )
+                bookmark.category = Category.objects.get(name=category)
+            else:
+                bookmark.title = bookmark.url.strip('https://').strip('http://')
+                bookmark.description = ''
+                bookmark.category = Category.objects.get(name='General')
 
             bookmark.save()
             messages.success(request, 'Bookmark saved successfully.')
         else:
-            messages.error(request, 'Error saving bookmark. Invalid URL or URL not reachable.')
+            messages.error(request, 'Error saving bookmark.')
 
     return HttpResponseRedirect(reverse('bookmarks'))
 
