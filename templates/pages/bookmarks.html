@@ -65,6 +65,9 @@
             <div class="card-body">
                 <ul class="list-unstyled mt-3 mb-4">
                     <li>{{ bookmark.description|default:'' }}</li>
+                    {% if bookmark.notes %}
+                        <li class="mt-2">Notes: {{ bookmark.notes }}</li>
+                    {% endif %}
                 </ul>
             </div>
             <div class="card-footer text-end">
