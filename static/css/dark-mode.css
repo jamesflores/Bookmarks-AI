@@ -1,0 +1,160 @@
+body.dark-mode {
+    --bs-primary: #0d6efd;
+    --bs-secondary: #6c757d;
+    --bs-success: #198754;
+    --bs-info: #0dcaf0;
+    --bs-warning: #ffc107;
+    --bs-danger: #dc3545;
+    --bs-light: #343a40;
+    --bs-dark: #f8f9fa;
+    --bs-white: #212529;
+    --bs-gray: #6c757d;
+    --bs-gray-dark: #343a40;
+    --bs-blue: #0d6efd;
+    --bs-indigo: #6610f2;
+    --bs-purple: #6f42c1;
+    --bs-pink: #d63384;
+    --bs-red: #dc3545;
+    --bs-orange: #fd7e14;
+    --bs-yellow: #ffc107;
+    --bs-green: #198754;
+    --bs-teal: #20c997;
+    --bs-cyan: #0dcaf0;
+    --bs-gray-100: #343a40;
+    --bs-gray-200: #495057;
+    --bs-gray-300: #6c757d;
+    --bs-gray-400: #adb5bd;
+    --bs-gray-500: #ced4da;
+    --bs-gray-600: #dee2e6;
+    --bs-gray-700: #e9ecef;
+    --bs-gray-800: #f8f9fa;
+    --bs-gray-900: #212529;
+}
+
+body.dark-mode {
+    background-color: #212529 !important;
+    color: #f8f9fa !important;
+}
+
+body.dark-mode .navbar {
+    background-color: #343a40 !important;
+}
+
+body.dark-mode .navbar .nav-link {
+    color: #f8f9fa !important;
+}
+
+body.dark-mode .navbar .navbar-brand {
+    color: #f8f9fa !important;
+}
+
+body.dark-mode .navbar .nav-link.active {
+    color: #ffffff !important;
+}
+
+body.dark-mode .navbar .dropdown-menu {
+    background-color: #343a40 !important;
+    color: #f8f9fa !important;
+}
+
+body.dark-mode .navbar .dropdown-item {
+    color: #f8f9fa !important;
+}
+
+body.dark-mode .navbar .dropdown-item:hover {
+    background-color: #495057 !important;
+    color: #f8f9fa !important;
+}
+
+body.dark-mode .btn-outline-light {
+    color: #f8f9fa !important;
+    border-color: #f8f9fa !important;
+}
+
+body.dark-mode .btn-outline-secondary {
+    color: #f8f9fa !important;
+    border-color: #f8f9fa !important;
+}
+
+body.dark-mode .btn-outline-primary {
+    color: #f8f9fa !important;
+    border-color: #0d6efd !important;
+}
+
+body.dark-mode .footer {
+    background-color: #343a40 !important;
+    color: #f8f9fa !important;
+}
+
+body.dark-mode .footer .text-muted {
+    color: #adb5bd !important;
+}
+
+body.dark-mode .footer .text-muted a {
+    color: #adb5bd !important;
+    text-decoration: none;
+}
+
+body.dark-mode .footer .text-muted a:hover {
+    color: #f8f9fa !important;
+    text-decoration: underline;
+}
+
+body.dark-mode .footer ul li {
+    color: #f8f9fa !important;
+}
+
+body.dark-mode li {
+    color: #f8f9fa !important;
+}
+
+body.dark-mode .form-text {
+    color: #f8f9fa !important;
+}
+
+body.dark-mode .form-text ul li {
+    color: #f8f9fa !important;
+}
+
+body.dark-mode .card {
+    background-color: #343a40 !important;
+    color: #f8f9fa !important;
+}
+
+body.dark-mode .card .card-header {
+    background-color: #343a40 !important;
+    color: #f8f9fa !important;
+}
+
+body.dark-mode .card .card-body {
+    background-color: #343a40 !important;
+    color: #f8f9fa !important;
+}
+
+body.dark-mode .card .card-footer {
+    background-color: #343a40 !important;
+    color: #f8f9fa !important;
+}
+
+body.dark-mode .modal-content {
+    background-color: #343a40 !important;
+    color: #f8f9fa !important;
+}
+
+body.dark-mode .modal-header {
+    background-color: #343a40 !important;
+    color: #f8f9fa !important;
+}
+
+body.dark-mode .modal-body {
+    background-color: #343a40 !important;
+    color: #f8f9fa !important;
+}
+
+body.dark-mode .modal-footer {
+    background-color: #343a40 !important;
+    color: #f8f9fa !important;
+}
+
+
+  
