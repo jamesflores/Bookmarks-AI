@@ -99,53 +99,64 @@ def SearchBookmarksView(request):
     else:
         return HttpResponseRedirect(reverse('bookmarks'))
     
-
+    
 @login_required(login_url='/accounts/login')
 def add_bookmark(request):
-    if request.method == 'POST':
-        form = BookmarkAddForm(request.POST)
-        if form.is_valid():
-            bookmark = form.save(commit=False)
-            bookmark.user = request.user
-            bookmark.notes = form.cleaned_data['notes']
+    try:
+        if request.method == 'POST':
+            form = BookmarkAddForm(request.POST)
+            if form.is_valid():
+                bookmark = form.save(commit=False)
+                bookmark.user = request.user
+                bookmark.notes = form.cleaned_data['notes']
 
-            # get content from URL
-            print(f"[{request.user}] Add bookmark: {bookmark.url}")
-            headers = {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'
-            }
-            response = requests.get(bookmark.url, headers=headers)
-            
-            if response.status_code == 200:
-                # get og tags
-                og_tags = get_og_tags(response.content)
-                bookmark.title = og_tags['title'] if og_tags['title'] else bookmark.url.strip('https://').strip('http://')
-                bookmark.description = og_tags['description'] if og_tags['description'] else None
+                try:
+                    # get content from URL
+                    print(f"[{request.user}] Add bookmark: {bookmark.url}")
+                    headers = {
+                        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'
+                    }
+                    response = requests.get(bookmark.url, headers=headers)
+                    
+                    if response.status_code == 200:
+                        # get og tags
+                        og_tags = get_og_tags(response.content)
+                        bookmark.title = og_tags['title'] if og_tags['title'] else bookmark.url.strip('https://').strip('http://')
+                        bookmark.description = og_tags['description'] if og_tags['description'] else None
 
-                # strip html from content
-                content = BeautifulSoup(response.content, 'html.parser').get_text()
-                #bookmark.summary = get_content_summary(content[:20000])  # Marvin AI
-                bookmark.summary = summarizer.summarize(content)  # Summa
-                print(f"Bookmark summary: {bookmark.summary}")
+                        # strip html from content
+                        content = BeautifulSoup(response.content, 'html.parser').get_text()
+                        #bookmark.summary = get_content_summary(content[:20000])  # Marvin AI
+                        bookmark.summary = summarizer.summarize(content)  # Summa
+                        print(f"Bookmark summary: {bookmark.summary}")
 
-                # classify bookmark
-                categories = Category.objects.filter(approved=True)
-                category = marvin.classify(
-                    f'{bookmark.title} {bookmark.description}',
-                    labels=[category.name for category in categories]
-                )
-                bookmark.category = Category.objects.get(name=category)
+                        # classify bookmark
+                        categories = Category.objects.filter(approved=True)
+                        category = marvin.classify(
+                            f'{bookmark.title} {bookmark.description}',
+                            labels=[category.name for category in categories]
+                        )
+                        bookmark.category = Category.objects.get(name=category)
+                    else:
+                        bookmark.title = bookmark.url.strip('https://').strip('http://')
+                        bookmark.description = ''
+                        bookmark.category = Category.objects.get(name='General')
+                except Exception as e:
+                    print(f"Error processing bookmark content: {e}")
+                    bookmark.title = bookmark.url.strip('https://').strip('http://')
+                    bookmark.description = ''
+                    bookmark.category = Category.objects.get(name='General')
+
+                bookmark.save()
+                messages.success(request, 'Bookmark saved successfully.')
+                return HttpResponseRedirect(reverse('bookmarks'))
             else:
-                bookmark.title = bookmark.url.strip('https://').strip('http://')
-                bookmark.description = ''
-                bookmark.category = Category.objects.get(name='General')
-
-            bookmark.save()
-            messages.success(request, 'Bookmark saved successfully.')
-        else:
-            messages.error(request, 'Error saving bookmark.')
-
-    return HttpResponseRedirect(reverse('bookmarks'))
+                messages.error(request, 'Error saving bookmark.')
+                return HttpResponseRedirect(reverse('bookmark_add'))
+    except Exception as e:
+        print(f"Error adding bookmark: {e}")
+        messages.error(request, 'An unexpected error occurred while saving the bookmark.')
+        return HttpResponseRedirect(reverse('bookmark_add'))
 
 
 @login_required(login_url='/accounts/login')
